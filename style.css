@@ -1,0 +1,67 @@
+body{
+    font-family: "Lucida Console", "Courier New", monospace;
+    padding:0;
+    margin:0;
+}
+
+p{
+    padding:0;
+    margin:0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 80%;
+    height: 15px;
+    border-radius: 0px;   
+    background: #000000;
+    outline: none;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 10px;
+    border-radius: 0%; 
+    background: #ffffff;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 20%;
+    background: #ffffff;
+    cursor: pointer;
+  }
+
+header {
+    color: white;
+    background: black;
+    padding: 20px;
+    
+}
+
+section {
+    color: black;
+    background: white;
+    padding: 20px;
+    
+}
+
+div {
+    margin: auto;
+    text-align: left;
+
+}
+
+canvas {
+    border: 1px solid black;
+    width: min(80vw, 80vh);
+    height: min(80vw, 80vh);
+}

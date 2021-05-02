@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href='style.css'>
+    <title>Ising Model Simulation</title>
+</head>
+<body>
+    <header>
+        <p>ising model simulation</p>
+    </header>
+
+    <section>  
+        <p>parameters</p>
+
+        <ul>
+            <li class="paramList">
+                <p>temperature:</p>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="temperatureCursor">
+                </div>
+            </li>
+
+            <li class="paramList">
+                <p>number of x-sites:</p>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="80" value="30" class="slider" id="xsiteCursor">
+                </div>
+            </li>
+
+            <li class="paramList">
+                <p>number of y-sites:</p>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="80" value="30" class="slider" id="ysiteCursor">
+                </div>
+            </li>
+
+            <li class="paramList">
+                <p>flips per time-time step:</p>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="sitesPerTimeStep">
+                </div>
+            </li>
+
+            <li class="paramList">
+                <p>resolution:</p>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="qualityCursor">
+                </div>
+            </li>
+            
+        </ul>
+    </section>
+
+    <section>
+    <p>simulation </p>
+    <br>
+
+    <canvas id="mainCanvas"></canvas>
+
+    
+    </section>
+
+    <section>
+        <p>info </p>
+        <br>
+
+        <p id="magnetization"> </p>
+        
+        </section>
+    
+    
+    <script src="app.js"> </script>
+
+</body>
+</html>
