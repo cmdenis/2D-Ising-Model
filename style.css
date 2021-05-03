@@ -2,6 +2,7 @@ body{
     font-family: "Lucida Console", "Courier New", monospace;
     padding:0;
     margin:0;
+    font-size: medium;
 }
 
 p{
@@ -39,6 +40,18 @@ ul {
     background: #ffffff;
     cursor: pointer;
   }
+
+.button {
+    background-color: #000000;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: medium;
+    margin: 4px 2px;
+    cursor: pointer;
+}
 
 header {
     color: white;

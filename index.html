@@ -17,7 +17,7 @@
 
         <ul>
             <li class="paramList">
-                <p>temperature:</p>
+                <p id="temperatureReading"></p>
                 <div class="slidecontainer">
                     <input type="range" min="1" max="100" value="50" class="slider" id="temperatureCursor">
                 </div>
@@ -44,14 +44,16 @@
                 </div>
             </li>
 
-            <li class="paramList">
+            <!-- <li class="paramList">
                 <p>resolution:</p>
                 <div class="slidecontainer">
                     <input type="range" min="1" max="100" value="50" class="slider" id="qualityCursor">
                 </div>
-            </li>
+            </li> -->
             
         </ul>
+
+        <input type="button" class="button" id="resetButton" value="reset">
     </section>
 
     <section>
