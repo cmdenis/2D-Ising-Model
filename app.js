@@ -254,10 +254,10 @@ tempSlider.oninput = function() {
 
 // Switch per time step
 var flipSlider = document.getElementById("sitesPerTimeStep");
-document.getElementById("sitesTimeStepReading").innerHTML = "flips per time-time step: " + 100; 
+document.getElementById("sitesTimeStepReading").innerHTML = "flips per time-step: " + 100; 
 var inputFlips = flipSlider.value;
 flipSlider.oninput = function() {
-    document.getElementById("sitesTimeStepReading").innerHTML = "flips per time-time step: " + this.value;
+    document.getElementById("sitesTimeStepReading").innerHTML = "flips per time-step: " + this.value;
     inputFlips = flipSlider.value;
 }
 
