@@ -16,7 +16,7 @@ ul {
 
 .slider {
     -webkit-appearance: none;
-    width: 80%;
+    width: min(70vw, 70vh) ;
     height: 15px;
     border-radius: 0px;   
     background: #000000;
@@ -51,6 +51,10 @@ ul {
     font-size: medium;
     margin: 4px 2px;
     cursor: pointer;
+}
+
+a{
+    color: #000000;
 }
 
 header {

@@ -24,13 +24,18 @@
 var resetButton = document.getElementById("resetButton");
 
 
-function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_sites){
-    function Site(){
+function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_sites, isRandom){
+    function Site(_rand){
         /* Constructor to generate each individual site of the Ising grid */
     
-        //this.spin = 1; // All the sites start with a spin up
-    
-        this.spin = (Math.floor(Math.random()-0.5)+1)*2 -1;
+        
+        if(_rand){
+            this.spin = (Math.floor(Math.random()-0.5)+1)*2 -1; // All spins are random
+        }
+        else{
+            this.spin = 1; // All the sites start with a spin up
+        }
+        
     
         this.changeSpin = function() {
             /* Method that changes the spin */
@@ -40,15 +45,10 @@ function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_
     
     // Simulation parameters
     
-    //var temp = 2                  // Temperature
-    var kb = 1;                      //
+    var kb = 1;
     var magn = 1;
-    //var switchPerTimeStep = 30      // Number of picked sites per time step
     
     // Creating the array that will contain all the sites
-    
-    //var nb_x_sites = 30;
-    //var nb_y_sites = 30;
 
     var isingGrid = null;
     
@@ -58,22 +58,22 @@ function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_
         isingGrid[i] = new Array(nb_y_sites)
         for (var j = 0; j < nb_y_sites; j++) {
             
-            isingGrid[i][j] = new Site();      // Building all the actual sites
+            isingGrid[i][j] = new Site(isRandom);      // Building all the actual sites
         
         }
     }
-    
-    
     
     function checkEnergy(grid, x_pos, y_pos) {
         /* Function that checks the energy difference of flipping the spin */
     
         var switchSpin = 2*grid[x_pos][y_pos].spin;
+        
     
         var up = switchSpin * grid[x_pos][(y_pos + 1) % nb_y_sites].spin;
         var down = switchSpin * grid[x_pos][(((y_pos - 1) % nb_y_sites) + nb_y_sites) % nb_y_sites].spin;
         var right = switchSpin * grid[(x_pos + 1) % nb_x_sites][y_pos].spin;
         var left = switchSpin * grid[(((x_pos - 1) % nb_x_sites) + nb_x_sites) % nb_x_sites][y_pos].spin;
+
     
         return (up + down + right + left)*magn;
     }
@@ -126,7 +126,6 @@ function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_
         var blockSizeX = canvas.width/nb_x_sites;
         var blockSizeY = canvas.height/nb_y_sites;
     
-    
         for(var i = 0; i < siteList.length; i++){
     
             var upDown = (isingGrid[siteList[i][0]][siteList[i][1]].spin + 1)/2;
@@ -162,7 +161,6 @@ function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_
         /* Function to draw the initial layout of the spins. 
         It's no use to update all the of the sites later on. Only the ones which changes
         need to be adjusted. */
-        
     
         initList = [];
         for(var i = 0; i<nb_x_sites; i++){
@@ -185,24 +183,12 @@ function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawInit();
 
+    var safetyClear = 0;
     
     // This is the recursive animation function that will redraw the canvas to create the animation.
     function animate() {
         
-        // This is the heavier way of
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
-        //drawInit();
-        //pickSite(isingGrid, switchPerTimeStep);
-        
-
-
-        // So, this should be the most efficient way of doing things, but it does not work...
-        // I suspect this is because of a clash between functions doing synchronous/asynchronous work
-        // together and creating a problem with the drawing. The actual array containing the sites seems to work just fine,
-        // It's the drawing part that seems to be problematic. To be figured out to improve code efficiency...
-
         draw(pickSite(isingGrid, switchPerTimeStep));  // Draws the sites that are changed
-        
         
         // This is the part to calculate the magnetization per spin of the lattice
         var netMagnetization = 0;       
@@ -211,22 +197,26 @@ function isingsimulation(ctx, canvas, temp, switchPerTimeStep, nb_x_sites, nb_y_
                 netMagnetization += isingGrid[i][j].spin;
             }
         }
+
+        safetyClear ++;
+        if(safetyClear==50){    // This is a precaution that redraws the entire grid every couple of frames, in case some pixels get stuck, which does happen for some unknown reason.
+            drawInit();         // It also helps with the "grid artefacts"
+            safetyClear = 0;
+        }
+
+
+
         var magPerSpin = Math.round(netMagnetization/(nb_x_sites*nb_y_sites)*100)/100;
         document.getElementById("magnetization").innerHTML = "magnetization per spin: " + magPerSpin;  // Outputs the magnetization per spin
-        resetButton.onclick = function() {
-            console.log("inside function")
-            startNew = true;
+        
+        resetButton.onclick = function() { // This is needed so to stop the asynchronous animation from running.
             animationBreak = false;
         }
         if(animationBreak){
             requestAnimationFrame(animate);
         }
-        
-    
     }
-    
     animate()
-
 }
 
 
@@ -241,11 +231,11 @@ mycanvas.width = window.innerWidth*0.8*scaler;
 mycanvas.height = window.innerHeight*0.8*scaler;
 
 
-isingsimulation(context, mycanvas, 0.1, 30, 30, 30);
+isingsimulation(context, mycanvas, 0.1, 100, 30, 30, true);
 
 
 resetButton.addEventListener("click", function(){
-    isingsimulation(context, mycanvas, 0.1, 30, 30, 30);
+    isingsimulation(context, mycanvas, inputTemp, inputFlips, xSite, ySite, initRandom);
 }, false);
 
 /// TO DO: ADD A CHECKBOX THAT MAKES IT EITHER SPIN ALLIGNED OR SPIN RANDOM
@@ -255,17 +245,57 @@ resetButton.addEventListener("click", function(){
 
 // Temperature
 var tempSlider = document.getElementById("temperatureCursor");
-document.getElementById("temperatureReading").innerHTML = "temperature: " + tempSlider.value; 
-var inputTemp = tempSlider.value;
+document.getElementById("temperatureReading").innerHTML = "temperature: " + 0.1; 
+var inputTemp = tempSlider.value/10;
 tempSlider.oninput = function() {
-    document.getElementById("temperatureReading").innerHTML = "temperature: " + this.value;
-    inputTemp = tempSlider.value;
-    
+    document.getElementById("temperatureReading").innerHTML = "temperature: " + this.value/10;
+    inputTemp = this.value/10;
 }
 
+// Switch per time step
+var flipSlider = document.getElementById("sitesPerTimeStep");
+document.getElementById("sitesTimeStepReading").innerHTML = "flips per time-time step: " + 100; 
+var inputFlips = flipSlider.value;
+flipSlider.oninput = function() {
+    document.getElementById("sitesTimeStepReading").innerHTML = "flips per time-time step: " + this.value;
+    inputFlips = flipSlider.value;
+}
 
+// Number of horizontal (x) sites
+var xSiteSlider = document.getElementById("xsiteCursor");
+document.getElementById("xSiteReading").innerHTML = "number of x-sites: " + 30; 
+var xSite = parseInt(xSiteSlider.value, 10);
+xSiteSlider.oninput = function() {
+    document.getElementById("xSiteReading").innerHTML = "number of x-sites: " + this.value;
+    xSite = parseInt(this.value, 10);
+}
 
+// Number of horizontal (y) sites
+var ySiteSlider = document.getElementById("ysiteCursor");
+document.getElementById("ySiteReading").innerHTML = "number of y-sites: " + 30; 
+var ySite = parseInt(ySiteSlider.value, 10);
+ySiteSlider.oninput = function() {
+    document.getElementById("ySiteReading").innerHTML = "number of y-sites: " + this.value;
+    ySite = parseInt(this.value, 10);
+}
 
+// Alligned/random initial spins checkbox
+var checkboxInitState = document.getElementById("initCheckbox");
+document.getElementById("checkRandomInitReading").innerHTML = "initial configuration: random"; 
+var initRandom = true;
+
+checkboxInitState.oninput = function() {
+    console.log("here")
+    if(document.getElementById('initCheckbox').checked){
+        document.getElementById("checkRandomInitReading").innerHTML = "initial configuration: alligned";
+        initRandom = false;
+    }
+    else{
+        document.getElementById("checkRandomInitReading").innerHTML = "initial configuration: random";
+        initRandom = true;
+    }
+    
+}
 
 
 

@@ -12,35 +12,49 @@
         <p>ising model simulation</p>
     </header>
 
+    <p style=' padding: 20px; width: min(70vw, 70vh);'>
+        you will find on this page a dynamic simulation of the 2d ising model. this simulation uses the metropolis algorithm. 
+        you can change various parameters below. they will only take effect once you press the restart
+        button. you can learn more about the physics involved in this simulation 
+        <a href="https://en.wikipedia.org/wiki/Ising_model">here</a>.
+    </p>
+
     <section>  
-        <p>parameters</p>
+        <p> <u>parameters</u></p>
 
         <ul>
             <li class="paramList">
+                <p id="checkRandomInitReading"></p>
+                <div class="slidecontainer">
+                    <input type="checkbox" id="initCheckbox">
+                </div>
+            </li>
+
+            <li class="paramList">
                 <p id="temperatureReading"></p>
                 <div class="slidecontainer">
-                    <input type="range" min="1" max="100" value="50" class="slider" id="temperatureCursor">
+                    <input type="range" min="1" max="100" value="1" class="slider" id="temperatureCursor">
                 </div>
             </li>
 
             <li class="paramList">
-                <p>number of x-sites:</p>
+                <p id="xSiteReading"></p>
                 <div class="slidecontainer">
-                    <input type="range" min="1" max="80" value="30" class="slider" id="xsiteCursor">
+                    <input type="range" min="1" max="150" value="30" class="slider" id="xsiteCursor">
                 </div>
             </li>
 
             <li class="paramList">
-                <p>number of y-sites:</p>
+                <p id="ySiteReading"></p>
                 <div class="slidecontainer">
-                    <input type="range" min="1" max="80" value="30" class="slider" id="ysiteCursor">
+                    <input type="range" min="1" max="150" value="30" class="slider" id="ysiteCursor">
                 </div>
             </li>
 
             <li class="paramList">
-                <p>flips per time-time step:</p>
-                <div class="slidecontainer">
-                    <input type="range" min="1" max="100" value="50" class="slider" id="sitesPerTimeStep">
+                <p id="sitesTimeStepReading"></p>
+                <div class="sitesTimeStepReading">
+                    <input type="range" min="1" max="500" value="100" class="slider" id="sitesPerTimeStep">
                 </div>
             </li>
 
@@ -53,11 +67,11 @@
             
         </ul>
 
-        <input type="button" class="button" id="resetButton" value="reset">
+        <input type="button" class="button" id="resetButton" value="restart">
     </section>
 
     <section>
-    <p>simulation </p>
+    <p> <u>simulation</u>  </p>
     <br>
 
     <canvas id="mainCanvas"></canvas>
@@ -66,7 +80,7 @@
     </section>
 
     <section>
-        <p>info </p>
+        <p><u>info</u>  </p>
         <br>
 
         <p id="magnetization"> </p>
